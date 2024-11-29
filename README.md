@@ -8,4 +8,4 @@ Main menu of the App:
 ![Main menu of the App](/1.PNG)
 
 # Package
-in NuGet Package Manager for Solution, i installed Microsoft.Data.SqlClient for the project
+in NuGet Package Manager for Solution, i installed Microsoft.Data.SqlClient 5.2.2 for the project
