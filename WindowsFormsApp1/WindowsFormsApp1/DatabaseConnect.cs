@@ -13,7 +13,7 @@ namespace WindowsFormsApp1
         public SqlConnection sqlconn()
         {
             SqlConnection sqlcon = null;
-            sqlcon = new SqlConnection("Data Source=localhost;Initial Catalog=TableTep;Integrated Security=True");
+            sqlcon = new SqlConnection("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\\localData.mdf;Integrated Security=True");
             return sqlcon;
         }
 
