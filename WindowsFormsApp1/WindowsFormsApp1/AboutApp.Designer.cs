@@ -118,11 +118,11 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(131, 242);
+            this.label7.Location = new System.Drawing.Point(92, 237);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(78, 13);
+            this.label7.Size = new System.Drawing.Size(176, 13);
             this.label7.TabIndex = 8;
-            this.label7.Text = "Public Release";
+            this.label7.Text = "Unreleased x86 localdb_test Debug";
             // 
             // AboutApp
             // 
