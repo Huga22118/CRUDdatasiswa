@@ -61,14 +61,15 @@ namespace WindowsFormsApp1
                         }
                         conn = db.sqlconn();
                         conn.Open();
-                        SqlCommand cmd = new SqlCommand("Insert into loginDb (Username,Password) Values (@Username,@Password)", conn);
+                        SqlCommand cmd = new SqlCommand("Insert into loginDb (Username,Password,IsAdmin) Values (@Username,@Password,@IsAdmin)", conn);
                         cmd.Parameters.AddWithValue("@Username", username);
                         cmd.Parameters.AddWithValue("@Password", password);
+                        cmd.Parameters.AddWithValue("@IsAdmin", 0);
 
                         cmd.ExecuteNonQuery();
                         MessageBox.Show("Registrasi berhasil!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        
-                
+
+
                         if (Menu == null)
                         {
                             Menu = new Menu();
@@ -78,12 +79,16 @@ namespace WindowsFormsApp1
                             Menu.ShowDialog();
                             this.Close();
                         }
-                        
+
                     }
                     else
                     {
                         MessageBox.Show("Repeat Password tidak sama dengan Password!", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+                }
+                else
+                {
+                    MessageBox.Show("Isi yang kosong!", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
             }
@@ -134,3 +139,4 @@ namespace WindowsFormsApp1
         }
     }
 }
+

@@ -17,10 +17,12 @@ namespace WindowsFormsApp1
     {
         SqlConnection conn = null;
         DatabaseConnect db = new DatabaseConnect();
+        private string getName;
 
-        public AboutApp()
+        public AboutApp(string name)
         {
             InitializeComponent();
+            this.getName = name;
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -37,16 +39,26 @@ namespace WindowsFormsApp1
                 });
             }
             catch (Exception ex)
-            
-                {
-                    MessageBox.Show($"Tidak dapat membuka link: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                
+
+            {
+                MessageBox.Show($"Tidak dapat membuka link: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
             }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void AboutApp_Load(object sender, EventArgs e)
+        {
+            label8.Text = $"Logged in as {getName}";
+        }
+
+        private void label8_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

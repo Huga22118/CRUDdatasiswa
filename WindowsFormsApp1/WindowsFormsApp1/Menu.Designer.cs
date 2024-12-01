@@ -53,6 +53,7 @@
             this.logoutExitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.otherToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -289,21 +290,21 @@
             // loggedInAsToolStripMenuItem
             // 
             this.loggedInAsToolStripMenuItem.Name = "loggedInAsToolStripMenuItem";
-            this.loggedInAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.loggedInAsToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.loggedInAsToolStripMenuItem.Text = "Logged in as";
             this.loggedInAsToolStripMenuItem.Click += new System.EventHandler(this.loggedInAsToolStripMenuItem_Click);
             // 
             // logoutToolStripMenuItem
             // 
             this.logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
-            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.logoutToolStripMenuItem.Text = "Log-out";
             this.logoutToolStripMenuItem.Click += new System.EventHandler(this.logoutToolStripMenuItem_Click);
             // 
             // logoutExitToolStripMenuItem
             // 
             this.logoutExitToolStripMenuItem.Name = "logoutExitToolStripMenuItem";
-            this.logoutExitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.logoutExitToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.logoutExitToolStripMenuItem.Text = "Log-out and Exit";
             this.logoutExitToolStripMenuItem.Click += new System.EventHandler(this.logoutExitToolStripMenuItem_Click);
             // 
@@ -318,9 +319,19 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.BackColor = System.Drawing.Color.Transparent;
+            this.label5.Location = new System.Drawing.Point(391, 41);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(35, 13);
+            this.label5.TabIndex = 21;
+            this.label5.Text = "label5";
             // 
             // Menu
             // 
@@ -329,6 +340,7 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(798, 326);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.buttonStop);
@@ -389,6 +401,7 @@
         private System.Windows.Forms.ToolStripMenuItem logoutExitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem otherToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.Label label5;
     }
 }
 

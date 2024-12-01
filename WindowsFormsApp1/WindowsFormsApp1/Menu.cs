@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Data.SqlClient;
 using System.Media;
 using System.IO;
+using System.Security.Permissions;
 namespace WindowsFormsApp1
 {
     public partial class Menu : Form
@@ -19,18 +20,20 @@ namespace WindowsFormsApp1
         SoundPlayer player;
         private bool isMusicPlaying = false;
         private bool isMusicStopped = false;
-
         Register Register;
         Login Login;
         AboutApp AboutApp;
-        public string LoggedInAs 
+        public string LoggedInAs
         {
-            get; set; 
+            get; set;
         }
+
+        public string username;
+        public bool getAdminStatus { get; set; }
         public Menu()
         {
             InitializeComponent();
-            for (int i = 1; i<=35; i++)
+            for (int i = 1; i <= 35; i++)
             {
                 comboBox1.Items.Add(i);
             }
@@ -38,7 +41,7 @@ namespace WindowsFormsApp1
             pictureBox2.Visible = false;
             pictureBox3.Visible = false;
             label4.Text = "Music: ";
-            
+
         }
 
 
@@ -80,6 +83,7 @@ namespace WindowsFormsApp1
         }
         private void Form1_Load(object sender, EventArgs e)
         {
+
             try
             {
                 if (conn == null)
@@ -90,6 +94,16 @@ namespace WindowsFormsApp1
 
                 sqlcon = conn.sqlconn();
                 sqlcon.Open();
+
+                Login log = new Login();
+
+                label5.Text = getAdminStatus ? "Logged in as Admin" : $"Logged in as {LoggedInAs}";
+                label5.Visible = getAdminStatus;
+                button1.Enabled = getAdminStatus;
+                button2.Enabled = getAdminStatus;
+                button3.Enabled = getAdminStatus;
+
+
 
                 // Ambil data dari tabel dan tampilkan di DataGridView
                 SqlCommand cmd = new SqlCommand("SELECT * FROM UserTable", sqlcon);
@@ -241,29 +255,15 @@ namespace WindowsFormsApp1
 
                 // Ambil nama dari TextBox pencarian
                 string searchName = TXTBnama.Text.Trim();
-                
+                string searchKelas = TXTBkelas.Text.Trim();
+                string searchAbsen = comboBox1.Text.Trim();
+
                 if (string.IsNullOrEmpty(searchName))
                 {
                     GetRefreshDataGrid();
                     //MessageBox.Show("Nama yang dicari tidak boleh kosong!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-
-                /*if (string.IsNullOrEmpty(searchName) && !string.IsNullOrEmpty(getClass))
-                {
-                    MessageBox.Show("Nama yang dicari tidak boleh kosong!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-                else if (string.IsNullOrEmpty(getClass))
-                {
-                    MessageBox.Show("Nama yang dicari tidak boleh kosong!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-                else if (string.IsNullOrEmpty(getAbsen))
-                {
-                    MessageBox.Show("Nama yang dicari tidak boleh kosong!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }*/
 
 
                 // Pastikan koneksi berhasil
@@ -279,7 +279,7 @@ namespace WindowsFormsApp1
                 // Ambil data dari database berdasarkan nama
                 SqlCommand cmd = new SqlCommand("SELECT * FROM UserTable WHERE Name LIKE @Name", sqlcon);
                 cmd.Parameters.AddWithValue("@Name", "%" + searchName + "%");
- 
+
 
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
@@ -293,19 +293,21 @@ namespace WindowsFormsApp1
 
                 // Tampilkan hasil pencarian ke DataGridView
                 dataGridView1.DataSource = dt;
-
+                dataGridView1.ClearSelection(); // Pastikan hasil pencarian yang salah tidak menghighlight nama
                 // Cari dan highlight baris yang sesuai
                 bool found = false;
-                
+
                 foreach (DataGridViewRow row in dataGridView1.Rows)
                 {
-                    if (row.Cells["Name"].Value != null && row.Cells["Name"].Value.ToString() == searchName)
+                    if (row.Cells["Name"].Value != null && row.Cells["Name"].Value.ToString() == searchName &&
+                        row.Cells["Kelas"].Value != null && row.Cells["Kelas"].Value.ToString() == searchKelas &&
+                        row.Cells["Absen"].Value != null && row.Cells["Absen"].Value.ToString() == searchAbsen)
                     {
                         row.Selected = true;
                         found = true;
                         break;
                     }
-                    
+
                 }
 
                 if (!found)
@@ -313,7 +315,7 @@ namespace WindowsFormsApp1
                     MessageBox.Show("Data tidak ditemukan di DataGridView!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-             
+
             }
             catch (Exception ex)
             {
@@ -348,7 +350,7 @@ namespace WindowsFormsApp1
                 pictureBox2.Visible = false;
                 label4.Text = $"Music: {Path.GetFileNameWithoutExtension(loc)}";
                 isMusicPlaying = true;
-                
+
             }
             catch (Exception ex)
             {
@@ -404,7 +406,7 @@ namespace WindowsFormsApp1
 
         private void loggedInAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void logoutExitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -441,7 +443,7 @@ namespace WindowsFormsApp1
             {
                 if (AboutApp == null)
                 {
-                    AboutApp = new AboutApp();
+                    AboutApp = new AboutApp(LoggedInAs);
                     AboutApp.FormClosed += AboutApp_Closed;
                     AboutApp.ShowDialog();
                 }
@@ -456,4 +458,4 @@ namespace WindowsFormsApp1
             }
         }
     }
-    }
+}

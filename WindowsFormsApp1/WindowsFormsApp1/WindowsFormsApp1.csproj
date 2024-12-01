@@ -324,19 +324,15 @@
     <Error Condition="!Exists('..\packages\Microsoft.Data.SqlClient.SNI.5.2.0\build\net462\Microsoft.Data.SqlClient.SNI.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Data.SqlClient.SNI.5.2.0\build\net462\Microsoft.Data.SqlClient.SNI.targets'))" />
   </Target>
   <PropertyGroup>
-    <PreBuildEvent>if not exist "$(TargetDir)\FIFTY FIFTY - Cupid Twin Version Speed Up.wav" (
-    copy "$(ProjectDir)\FIFTY FIFTY - Cupid Twin Version Speed Up.wav" "$(TargetDir)\FIFTY FIFTY - Cupid Twin Version Speed Up.wav"
+    <PreBuildEvent>if not exist "$(TargetDir)FIFTY FIFTY - Cupid Twin Version Speed Up.wav" (
+    copy "$(ProjectDir)FIFTY FIFTY - Cupid Twin Version Speed Up.wav" "$(TargetDir)FIFTY FIFTY - Cupid Twin Version Speed Up.wav"
 )
-
-
-
 if exist "$(TargetDir)localData.mdf" (
     echo File localData.mdf exists in TargetDir.
 ) else (
     echo File localData.mdf does not exist in TargetDir. Copying...
     copy "$(ProjectDir)localData.mdf" "$(TargetDir)"
 )
-
 if exist "$(TargetDir)localData_log.ldf" (
     echo File localData_log.ldf exists in TargetDir.
 ) else (
