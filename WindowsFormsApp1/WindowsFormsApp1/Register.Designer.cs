@@ -30,14 +30,14 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Register));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label4 = new System.Windows.Forms.Label();
+            this.TXTBrepeat = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.TXTBusername = new System.Windows.Forms.TextBox();
             this.TXTBpassword = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.TXTBrepeat = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -59,6 +59,26 @@
             this.panel1.Size = new System.Drawing.Size(337, 274);
             this.panel1.TabIndex = 21;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.BackColor = System.Drawing.Color.Transparent;
+            this.label4.Location = new System.Drawing.Point(80, 168);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(94, 13);
+            this.label4.TabIndex = 21;
+            this.label4.Text = "Repeat Password:";
+            this.label4.Click += new System.EventHandler(this.label4_Click);
+            // 
+            // TXTBrepeat
+            // 
+            this.TXTBrepeat.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.TXTBrepeat.Location = new System.Drawing.Point(83, 184);
+            this.TXTBrepeat.Name = "TXTBrepeat";
+            this.TXTBrepeat.PasswordChar = '*';
+            this.TXTBrepeat.Size = new System.Drawing.Size(165, 20);
+            this.TXTBrepeat.TabIndex = 20;
             // 
             // button1
             // 
@@ -123,26 +143,6 @@
             this.label1.TabIndex = 16;
             this.label1.Text = "Username:";
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.BackColor = System.Drawing.Color.Transparent;
-            this.label4.Location = new System.Drawing.Point(80, 168);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(94, 13);
-            this.label4.TabIndex = 21;
-            this.label4.Text = "Repeat Password:";
-            this.label4.Click += new System.EventHandler(this.label4_Click);
-            // 
-            // TXTBrepeat
-            // 
-            this.TXTBrepeat.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.TXTBrepeat.Location = new System.Drawing.Point(83, 184);
-            this.TXTBrepeat.Name = "TXTBrepeat";
-            this.TXTBrepeat.PasswordChar = '*';
-            this.TXTBrepeat.Size = new System.Drawing.Size(165, 20);
-            this.TXTBrepeat.TabIndex = 20;
-            // 
             // Register
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -155,6 +155,7 @@
             this.Name = "Register";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Register";
+            this.Load += new System.EventHandler(this.Register_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
