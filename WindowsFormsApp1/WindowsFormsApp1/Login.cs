@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,7 @@ namespace WindowsFormsApp1
         Register Register;
         SqlConnection conn = null;
         DatabaseConnect db = new DatabaseConnect();
+        public bool isAdminLogin;
         void Menu_Closed(object sender, EventArgs e)
         {
             Menu = null;
@@ -64,10 +66,15 @@ namespace WindowsFormsApp1
                         conn = db.sqlconn();
                         conn.Open();
                         MessageBox.Show("Log-in berhasil!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        if (isAdminLogin)
+                        {
+                            MessageBox.Show("Logged in as Admin.", "Admin", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
                         if (Menu == null)
                         {
                             Menu = new Menu();
                             Menu.LoggedInAs = username;
+                            Menu.getAdminStatus = isAdminLogin;
                             Menu.FormClosed += Menu_Closed;
                             this.Hide();
                             Menu.ShowDialog();
@@ -76,9 +83,13 @@ namespace WindowsFormsApp1
                     }
                     else
                     {
-                        MessageBox.Show("Username atau Password salah!", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Username atau Password salah!", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
+                }
+                else
+                {
+                    MessageBox.Show("Isi Username dan Password!", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
             }
@@ -107,12 +118,18 @@ namespace WindowsFormsApp1
                     conn.Open();
                 }
 
-                string query = "select count(*) from loginDb where Username=@Username AND Password=@Password";
+                string query = "select IsAdmin from loginDb where Username=@Username AND Password=@Password";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@Username", check);
                 cmd.Parameters.AddWithValue("@Password", checkPass);
-                int count = (int)cmd.ExecuteScalar();
-                return count > 0;
+                object count = cmd.ExecuteScalar();
+                if (count != null)
+                {
+                    isAdminLogin = Convert.ToBoolean(count);
+                    return true;
+                }
+
+                return false;
             }
             catch (Exception ex)
             {
@@ -149,7 +166,7 @@ namespace WindowsFormsApp1
             }
             finally
             {
-                
+
             }
         }
     }
