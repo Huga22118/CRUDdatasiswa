@@ -120,16 +120,16 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(131, 242);
+            this.label7.Location = new System.Drawing.Point(118, 244);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(85, 13);
+            this.label7.Size = new System.Drawing.Size(91, 13);
             this.label7.TabIndex = 8;
-            this.label7.Text = "localDb_branch ";
+            this.label7.Text = "Initial Release 1.0";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(120, 268);
+            this.label8.Location = new System.Drawing.Point(113, 268);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(35, 13);
             this.label8.TabIndex = 9;
