@@ -23,9 +23,9 @@ namespace WindowsFormsApp1
         Register Register;
         Login Login;
         AboutApp AboutApp;
-        public string LoggedInAs
+        public string LoggedInAs 
         {
-            get; set;
+            get; set; 
         }
 
         public string username;
@@ -33,7 +33,7 @@ namespace WindowsFormsApp1
         public Menu()
         {
             InitializeComponent();
-            for (int i = 1; i <= 35; i++)
+            for (int i = 1; i<=35; i++)
             {
                 comboBox1.Items.Add(i);
             }
@@ -41,7 +41,7 @@ namespace WindowsFormsApp1
             pictureBox2.Visible = false;
             pictureBox3.Visible = false;
             label4.Text = "Music: ";
-
+            
         }
 
 
@@ -96,13 +96,13 @@ namespace WindowsFormsApp1
                 sqlcon.Open();
 
                 Login log = new Login();
-
+                
                 label5.Text = getAdminStatus ? "Logged in as Admin" : $"Logged in as {LoggedInAs}";
                 label5.Visible = getAdminStatus;
                 button1.Enabled = getAdminStatus;
                 button2.Enabled = getAdminStatus;
                 button3.Enabled = getAdminStatus;
-
+                
 
 
                 // Ambil data dari tabel dan tampilkan di DataGridView
@@ -257,7 +257,7 @@ namespace WindowsFormsApp1
                 string searchName = TXTBnama.Text.Trim();
                 string searchKelas = TXTBkelas.Text.Trim();
                 string searchAbsen = comboBox1.Text.Trim();
-
+                
                 if (string.IsNullOrEmpty(searchName))
                 {
                     GetRefreshDataGrid();
@@ -279,7 +279,7 @@ namespace WindowsFormsApp1
                 // Ambil data dari database berdasarkan nama
                 SqlCommand cmd = new SqlCommand("SELECT * FROM UserTable WHERE Name LIKE @Name", sqlcon);
                 cmd.Parameters.AddWithValue("@Name", "%" + searchName + "%");
-
+ 
 
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
@@ -296,7 +296,7 @@ namespace WindowsFormsApp1
                 dataGridView1.ClearSelection(); // Pastikan hasil pencarian yang salah tidak menghighlight nama
                 // Cari dan highlight baris yang sesuai
                 bool found = false;
-
+                
                 foreach (DataGridViewRow row in dataGridView1.Rows)
                 {
                     if (row.Cells["Name"].Value != null && row.Cells["Name"].Value.ToString() == searchName &&
@@ -307,7 +307,7 @@ namespace WindowsFormsApp1
                         found = true;
                         break;
                     }
-
+                    
                 }
 
                 if (!found)
@@ -315,7 +315,7 @@ namespace WindowsFormsApp1
                     MessageBox.Show("Data tidak ditemukan di DataGridView!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-
+             
             }
             catch (Exception ex)
             {
@@ -350,7 +350,7 @@ namespace WindowsFormsApp1
                 pictureBox2.Visible = false;
                 label4.Text = $"Music: {Path.GetFileNameWithoutExtension(loc)}";
                 isMusicPlaying = true;
-
+                
             }
             catch (Exception ex)
             {
@@ -406,7 +406,7 @@ namespace WindowsFormsApp1
 
         private void loggedInAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            
         }
 
         private void logoutExitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -443,7 +443,7 @@ namespace WindowsFormsApp1
             {
                 if (AboutApp == null)
                 {
-                    AboutApp = new AboutApp(LoggedInAs);
+                    AboutApp = new AboutApp(LoggedInAs, getAdminStatus);
                     AboutApp.FormClosed += AboutApp_Closed;
                     AboutApp.ShowDialog();
                 }
@@ -458,4 +458,4 @@ namespace WindowsFormsApp1
             }
         }
     }
-}
+    }
