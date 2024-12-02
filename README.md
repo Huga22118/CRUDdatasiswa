@@ -20,4 +20,4 @@ in NuGet Package Manager for Solution, i installed Microsoft.Data.SqlClient 5.2.
 - Open the .exe and you are set.
 
 # Bonus
-there is music you can listen to, and i added fifty fifty cupid to the app
+there is music you can listen to, i added fifty fifty cupid to the app
