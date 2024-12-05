@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Media;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,8 @@ namespace WindowsFormsApp1
         
         private string getName;
         private bool getAdmin;
+
+        SoundPlayer player;
 
         public AboutApp(string name, bool getAdminStatus)
         {
@@ -130,13 +133,14 @@ namespace WindowsFormsApp1
                 if (Login == null)
                 {
                     Login = new Login();
-                    Menu = new Menu();
                     this.Hide();
-                    Menu.Hide();
+                    this.Owner?.Hide();
+                    player = new SoundPlayer();
+                    player.Stop();
                     Login.FormClosed += Login_Closed;
                     Login.ShowDialog();
                     this.Close();
-                    Menu.Close();
+                    this.Owner?.Close();
                 }
 
             }

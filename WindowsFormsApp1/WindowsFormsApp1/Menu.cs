@@ -41,7 +41,9 @@ namespace WindowsFormsApp1
             pictureBox2.Visible = false;
             pictureBox3.Visible = false;
             label4.Text = "Music: ";
-            
+            isMusicPlaying = false;
+            player.Stop();
+            this.FormClosing += OnFormClosing;
         }
 
 
@@ -111,7 +113,23 @@ namespace WindowsFormsApp1
                 DataTable dt = new DataTable();
                 cod.Fill(dt);
                 dataGridView1.DataSource = dt;
-
+                if (getAdminStatus)
+                {
+                    // Admin: bisa mengedit tabel
+                    dataGridView1.ReadOnly = false;
+                    dataGridView1.AllowUserToAddRows = true;
+                    dataGridView1.AllowUserToDeleteRows = true;
+                    dataGridView1.MultiSelect = false;
+                }
+                else
+                {
+                    // Guest: hanya bisa melihat tabel
+                    dataGridView1.ReadOnly = true;
+                    dataGridView1.AllowUserToAddRows = false;
+                    dataGridView1.AllowUserToDeleteRows = false;
+                    dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+                    dataGridView1.MultiSelect = true;
+                }
                 // Menghapus highlight biru default
                 dataGridView1.ClearSelection();
 
@@ -169,7 +187,14 @@ namespace WindowsFormsApp1
         {
 
         }
-
+        private void OnFormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (isMusicPlaying)
+            {
+                isMusicPlaying = false;
+                player.Stop();
+            }
+        }
         private void button2_Click(object sender, EventArgs e)
         {
             try
@@ -342,6 +367,7 @@ namespace WindowsFormsApp1
                 if (isMusicPlaying)
                 {
                     MessageBox.Show("Musik sudah dinyalakan", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
                 string loc = "FIFTY FIFTY - Cupid Twin Version Speed Up.wav";
                 player.SoundLocation = loc;
@@ -418,6 +444,11 @@ namespace WindowsFormsApp1
         {
             try
             {
+                if (isMusicPlaying)
+                {
+                    isMusicPlaying = false;
+                    player.Stop();
+                }
                 if (Login == null)
                 {
                     Login = new Login();
@@ -445,6 +476,7 @@ namespace WindowsFormsApp1
                 {
                     AboutApp = new AboutApp(LoggedInAs, getAdminStatus);
                     AboutApp.FormClosed += AboutApp_Closed;
+                    AboutApp.Owner = this;
                     AboutApp.ShowDialog();
                 }
             }

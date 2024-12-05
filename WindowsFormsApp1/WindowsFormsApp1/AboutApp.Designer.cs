@@ -120,11 +120,11 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(118, 244);
+            this.label7.Location = new System.Drawing.Point(101, 244);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(91, 13);
+            this.label7.Size = new System.Drawing.Size(126, 13);
             this.label7.TabIndex = 8;
-            this.label7.Text = "Initial Release 1.0";
+            this.label7.Text = "Public Build: main branch";
             // 
             // label8
             // 
