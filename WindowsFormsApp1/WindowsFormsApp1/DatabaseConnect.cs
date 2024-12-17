@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
+using System.Diagnostics;
 namespace WindowsFormsApp1
-{
+{ 
     internal class DatabaseConnect
     {
         

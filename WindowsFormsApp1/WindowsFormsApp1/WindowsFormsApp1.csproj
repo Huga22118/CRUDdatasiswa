@@ -255,6 +255,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="Register.resx">
       <DependentUpon>Register.cs</DependentUpon>
@@ -292,6 +293,8 @@
     <Content Include="localData_log.ldf">
       <DependentUpon>localData.mdf</DependentUpon>
     </Content>
+    <None Include="play.png" />
+    <None Include="pause.png" />
   </ItemGroup>
   <ItemGroup>
     <PublishFile Include="localData.mdf">

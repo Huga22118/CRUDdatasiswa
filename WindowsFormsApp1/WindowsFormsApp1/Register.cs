@@ -50,13 +50,14 @@ namespace WindowsFormsApp1
                     return;
                 }
 
-                if (username != "" && password != "" && repeatPass != "")
+                if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password) && !string.IsNullOrEmpty(repeatPass))
                 {
                     if (password == repeatPass)
                     {
                         if (GetAccountToCheck(username))
                         {
                             MessageBox.Show("Akun sudah terdaftar", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            Logger.Log("Account already registered!");
                             return;
                         }
                         conn = db.sqlconn();
@@ -69,7 +70,7 @@ namespace WindowsFormsApp1
                         cmd.ExecuteNonQuery();
                         MessageBox.Show("Registrasi berhasil!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-
+                        Logger.Log("Opening Main Menu form...");
                         if (Menu == null)
                         {
                             Menu = new Menu();
@@ -140,8 +141,7 @@ namespace WindowsFormsApp1
 
         private void Register_Load(object sender, EventArgs e)
         {
-
+            Logger.Log("Register form launched.");
         }
     }
 }
-

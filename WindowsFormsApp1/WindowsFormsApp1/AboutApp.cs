@@ -21,17 +21,16 @@ namespace WindowsFormsApp1
         DatabaseConnect db = new DatabaseConnect();
         Menu Menu;
         Login Login;
-        
+        SoundPlayer player;
         private string getName;
         private bool getAdmin;
 
-        SoundPlayer player;
-
-        public AboutApp(string name, bool getAdminStatus)
+        public AboutApp(string name, bool getAdminStatus, Menu menu)
         {
             InitializeComponent();
             this.getName = name;
             this.getAdmin = getAdminStatus;
+            this.Menu = menu;
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -48,10 +47,10 @@ namespace WindowsFormsApp1
                 });
             }
             catch (Exception ex)
-            
-                {
-                    MessageBox.Show($"Tidak dapat membuka link: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                
+
+            {
+                MessageBox.Show($"Tidak dapat membuka link: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
             }
         }
 
@@ -63,6 +62,7 @@ namespace WindowsFormsApp1
         private void AboutApp_Load(object sender, EventArgs e)
         {
             label8.Text = $"Logged in as {getName}";
+            Logger.Log("About App form launched.");
         }
 
         private void label8_Click(object sender, EventArgs e)
@@ -70,7 +70,7 @@ namespace WindowsFormsApp1
 
         }
 
-       private bool CheckAccountToDeleteAdmin()
+        private bool CheckAccountToDeleteAdmin()
         {
             try
             {
@@ -87,6 +87,7 @@ namespace WindowsFormsApp1
                     cmd.Parameters.AddWithValue("@IsAdmin", 1);
                     object count = cmd.ExecuteScalar();
                     getAdmin = Convert.ToBoolean(count);
+                    Logger.Log("Admin Access Granted! Restarting the app...");
                     MessageBox.Show("Admin Access Granted");
                 }
                 else
@@ -96,6 +97,7 @@ namespace WindowsFormsApp1
                     cmd.Parameters.AddWithValue("@IsAdmin", 0);
                     object count = cmd.ExecuteScalar();
                     getAdmin = Convert.ToBoolean(count);
+                    Logger.Log("Admin Access Removed! Restarting the app...");
                     MessageBox.Show("Admin Access Removed");
                 }
 
@@ -118,9 +120,13 @@ namespace WindowsFormsApp1
         {
             Login = null;
         }
+        private void Menu_Closed(object sender, EventArgs e)
+        {
+            Menu = null;
+        }
         private void button2_Click(object sender, EventArgs e)
         {
-           
+
             try
             {
                 if (db == null)
@@ -130,15 +136,17 @@ namespace WindowsFormsApp1
                 }
                 CheckAccountToDeleteAdmin();
 
+
                 if (Login == null)
                 {
                     Login = new Login();
+                    Login.FormClosed += Login_Closed;
+                    player = new SoundPlayer();
+                    player?.Stop();
                     this.Hide();
                     this.Owner?.Hide();
-                    player = new SoundPlayer();
-                    player.Stop();
-                    Login.FormClosed += Login_Closed;
                     Login.ShowDialog();
+
                     this.Close();
                     this.Owner?.Close();
                 }

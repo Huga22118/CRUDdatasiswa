@@ -11,6 +11,7 @@ using System.Data.SqlClient;
 using System.Media;
 using System.IO;
 using System.Security.Permissions;
+using System.Runtime.CompilerServices;
 namespace WindowsFormsApp1
 {
     public partial class Menu : Form
@@ -23,29 +24,65 @@ namespace WindowsFormsApp1
         Register Register;
         Login Login;
         AboutApp AboutApp;
-        public string LoggedInAs 
+        private StringBuilder inputBuffer = new StringBuilder(); // Buffer untuk menyimpan input keyboard
+        public string LoggedInAs
         {
-            get; set; 
+            get; set;
         }
+
+        private Timer rotationTimer;
+        private int rotationAngle = 0;
 
         public string username;
         public bool getAdminStatus { get; set; }
         public Menu()
         {
             InitializeComponent();
-            for (int i = 1; i<=35; i++)
+            for (int i = 1; i <= 35; i++)
             {
                 comboBox1.Items.Add(i);
             }
             player = new SoundPlayer();
             pictureBox2.Visible = false;
             pictureBox3.Visible = false;
-            label4.Text = "Music: ";
             isMusicPlaying = false;
             player.Stop();
-            this.FormClosing += OnFormClosing;
+            label4.Text = "Music: ";
+            this.FormClosing += Menu_FormClosing;
+            rotationTimer = new Timer();
+            rotationTimer.Interval = 100;
+            rotationTimer.Tick += RotationTimer_Tick;
         }
 
+        private void RotationTimer_Tick(object sender, EventArgs e)
+        {
+            rotationAngle = (rotationAngle + 10) % 360; // Increase angle by 10 degrees
+            pictureBox2.Image = RotateImage(Properties.Resources.pause, rotationAngle);
+        }
+
+        private Image RotateImage(Image img, float rotationAngle)
+        {
+            Bitmap bmp = new Bitmap(img.Width, img.Height);
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                g.TranslateTransform((float)bmp.Width / 2, (float)bmp.Height / 2);
+                g.RotateTransform(rotationAngle);
+                g.TranslateTransform(-(float)bmp.Width / 2, -(float)bmp.Height / 2);
+                g.DrawImage(img, new Point(0, 0));
+            }
+            return bmp;
+        }
+
+
+        private void Menu_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (isMusicPlaying)
+            {
+                player.Stop();
+                isMusicPlaying = false;
+                Logger.Log("Music disabled.");
+            }
+        }
 
 
         private void GetRefreshDataGrid()
@@ -88,6 +125,7 @@ namespace WindowsFormsApp1
 
             try
             {
+                Logger.Log("Main menu form launched.");
                 if (conn == null)
                 {
                     MessageBox.Show("Koneksi database belum diinisialisasi.", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -98,13 +136,13 @@ namespace WindowsFormsApp1
                 sqlcon.Open();
 
                 Login log = new Login();
-                
+
                 label5.Text = getAdminStatus ? "Logged in as Admin" : $"Logged in as {LoggedInAs}";
                 label5.Visible = getAdminStatus;
                 button1.Enabled = getAdminStatus;
                 button2.Enabled = getAdminStatus;
                 button3.Enabled = getAdminStatus;
-                
+
 
 
                 // Ambil data dari tabel dan tampilkan di DataGridView
@@ -132,7 +170,7 @@ namespace WindowsFormsApp1
                 }
                 // Menghapus highlight biru default
                 dataGridView1.ClearSelection();
-
+                GetRefreshDataGrid();
                 loggedInAsToolStripMenuItem.Text = $"{LoggedInAs}";
             }
             catch (Exception ex)
@@ -166,9 +204,24 @@ namespace WindowsFormsApp1
                 cmd.Parameters.AddWithValue("@Kelas", TXTBkelas.Text);
                 cmd.Parameters.AddWithValue("@Absen", int.Parse(comboBox1.Text));
 
-                cmd.ExecuteNonQuery();
+                int rowsAffected = cmd.ExecuteNonQuery();
+                if (rowsAffected == 0)
+                {
+                    MessageBox.Show("Masukkan data!", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Logger.Log("Input the data!");
+                    return;
+                }
+
+
                 MessageBox.Show("Data berhasil diinput!", "Data", MessageBoxButtons.OK);
+                Logger.Log("Data has been added to the table.");
                 GetRefreshDataGrid();
+                Logger.Log("Table Refreshed!");
+
+
+
+
+
             }
             catch (Exception ex)
             {
@@ -187,14 +240,7 @@ namespace WindowsFormsApp1
         {
 
         }
-        private void OnFormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (isMusicPlaying)
-            {
-                isMusicPlaying = false;
-                player.Stop();
-            }
-        }
+
         private void button2_Click(object sender, EventArgs e)
         {
             try
@@ -219,7 +265,9 @@ namespace WindowsFormsApp1
                     return;
                 }
                 MessageBox.Show("Data berhasil dirubah!", "Data", MessageBoxButtons.OK);
+                Logger.Log("Data has been updated.");
                 GetRefreshDataGrid();
+                Logger.Log("Table Refreshed!");
             }
             catch (Exception ex)
             {
@@ -258,7 +306,9 @@ namespace WindowsFormsApp1
                     return;
                 }
                 MessageBox.Show("Data berhasil dihapus!", "Data", MessageBoxButtons.OK);
+                Logger.Log("Data has been deleted!");
                 GetRefreshDataGrid();
+                Logger.Log("Table Refreshed!");
             }
             catch (Exception ex)
             {
@@ -282,7 +332,7 @@ namespace WindowsFormsApp1
                 string searchName = TXTBnama.Text.Trim();
                 string searchKelas = TXTBkelas.Text.Trim();
                 string searchAbsen = comboBox1.Text.Trim();
-                
+
                 if (string.IsNullOrEmpty(searchName))
                 {
                     GetRefreshDataGrid();
@@ -304,7 +354,7 @@ namespace WindowsFormsApp1
                 // Ambil data dari database berdasarkan nama
                 SqlCommand cmd = new SqlCommand("SELECT * FROM UserTable WHERE Name LIKE @Name", sqlcon);
                 cmd.Parameters.AddWithValue("@Name", "%" + searchName + "%");
- 
+
 
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
@@ -315,13 +365,12 @@ namespace WindowsFormsApp1
                     MessageBox.Show("Data tidak ditemukan!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-
                 // Tampilkan hasil pencarian ke DataGridView
                 dataGridView1.DataSource = dt;
                 dataGridView1.ClearSelection(); // Pastikan hasil pencarian yang salah tidak menghighlight nama
                 // Cari dan highlight baris yang sesuai
                 bool found = false;
-                
+
                 foreach (DataGridViewRow row in dataGridView1.Rows)
                 {
                     if (row.Cells["Name"].Value != null && row.Cells["Name"].Value.ToString() == searchName &&
@@ -329,10 +378,11 @@ namespace WindowsFormsApp1
                         row.Cells["Absen"].Value != null && row.Cells["Absen"].Value.ToString() == searchAbsen)
                     {
                         row.Selected = true;
+                        Logger.Log($"Data found! Name: {searchName}, Kelas: {searchKelas}, Absen: {searchAbsen}");
                         found = true;
                         break;
                     }
-                    
+
                 }
 
                 if (!found)
@@ -340,7 +390,7 @@ namespace WindowsFormsApp1
                     MessageBox.Show("Data tidak ditemukan di DataGridView!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-             
+
             }
             catch (Exception ex)
             {
@@ -367,16 +417,15 @@ namespace WindowsFormsApp1
                 if (isMusicPlaying)
                 {
                     MessageBox.Show("Musik sudah dinyalakan", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
                 }
                 string loc = "FIFTY FIFTY - Cupid Twin Version Speed Up.wav";
                 player.SoundLocation = loc;
                 player.PlayLooping();
-                pictureBox3.Visible = true;
-                pictureBox2.Visible = false;
+                pictureBox3.Visible = false;
+                pictureBox2.Visible = true;
                 label4.Text = $"Music: {Path.GetFileNameWithoutExtension(loc)}";
                 isMusicPlaying = true;
-                
+                rotationTimer.Start();
             }
             catch (Exception ex)
             {
@@ -405,9 +454,10 @@ namespace WindowsFormsApp1
                 }
                 // Hentikan pemutaran musik
                 player.Stop();
-                pictureBox2.Visible = true;
-                pictureBox3.Visible = false;
+                pictureBox2.Visible = false;
+                pictureBox3.Visible = true;
                 isMusicPlaying = false;
+                rotationTimer.Stop();
                 //MessageBox.Show("Musik berhenti.", "Musik", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
@@ -432,7 +482,7 @@ namespace WindowsFormsApp1
 
         private void loggedInAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void logoutExitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -468,15 +518,50 @@ namespace WindowsFormsApp1
             }
         }
 
+        /*protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            foreach (Menu f in this.OwnedForms)
+            {
+                f.Close();
+            }
+
+            base.OnFormClosing(e);
+        }
+
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            base.OnSizeChanged(e);
+
+            foreach (Menu f in this.OwnedForms)
+            {
+                switch (this.WindowState)
+                {
+                    case FormWindowState.Minimized:
+                    case FormWindowState.Normal:
+                        f.WindowState = this.WindowState;
+                        break;
+
+                    case FormWindowState.Maximized:
+                        // just restore owned forms to their original sizes when parent form is maximized
+                        f.WindowState = FormWindowState.Normal;
+                        break;
+                }
+
+                // OnSizeChanged must be called, as changing WindowState property
+                // does not raise SizeChanged event
+                f.OnSizeChanged(EventArgs.Empty);
+            }
+        }*/
+
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
                 if (AboutApp == null)
                 {
-                    AboutApp = new AboutApp(LoggedInAs, getAdminStatus);
-                    AboutApp.FormClosed += AboutApp_Closed;
+                    AboutApp = new AboutApp(LoggedInAs, getAdminStatus, this);
                     AboutApp.Owner = this;
+                    //AboutApp.FormClosed += AboutApp_Closed;
                     AboutApp.ShowDialog();
                 }
             }
@@ -490,4 +575,4 @@ namespace WindowsFormsApp1
             }
         }
     }
-    }
+}

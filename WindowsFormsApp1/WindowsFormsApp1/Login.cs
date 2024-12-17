@@ -27,6 +27,9 @@ namespace WindowsFormsApp1
         {
             Register = null;
         }
+
+
+
         public Login()
         {
             InitializeComponent();
@@ -34,7 +37,7 @@ namespace WindowsFormsApp1
 
         private void Login_Load(object sender, EventArgs e)
         {
-
+            Logger.Log("Login form launched.");
         }
 
         private void label2_Click(object sender, EventArgs e)
@@ -59,13 +62,14 @@ namespace WindowsFormsApp1
                     return;
                 }
 
-                if (username != "" && password != "")
+                if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
                 {
                     if (GetAccountToCheck(username, password))
                     {
                         conn = db.sqlconn();
                         conn.Open();
                         MessageBox.Show("Log-in berhasil!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        Logger.Log("Account Found, log-in Succeded! Opening Main Menu Form...");
                         if (isAdminLogin)
                         {
                             MessageBox.Show("Logged in as Admin.", "Admin", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -83,13 +87,17 @@ namespace WindowsFormsApp1
                     }
                     else
                     {
+                        Logger.Log("Wrong Username or Password. Please try again!");
                         MessageBox.Show("Username atau Password salah!", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
                     }
 
                 }
                 else
                 {
+                    Logger.Log("Fill in the blanks!");
                     MessageBox.Show("Isi Username dan Password!", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
                 }
 
             }
@@ -122,10 +130,13 @@ namespace WindowsFormsApp1
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@Username", check);
                 cmd.Parameters.AddWithValue("@Password", checkPass);
+                Logger.Log("Checking Account...");
                 object count = cmd.ExecuteScalar();
                 if (count != null)
                 {
                     isAdminLogin = Convert.ToBoolean(count);
+                    string texttt = isAdminLogin ? "Logged in as Admin" : "Logged in as Guest";
+                    Logger.Log(texttt);
                     return true;
                 }
 
@@ -149,6 +160,7 @@ namespace WindowsFormsApp1
         {
             try
             {
+                Logger.Log("Opening Register form...");
                 if (Register == null)
                 {
                     Register = new Register();
